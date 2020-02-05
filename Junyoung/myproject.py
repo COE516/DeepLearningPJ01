@@ -2,17 +2,18 @@ import numpy as np
 import cv2
 from plantcv import plantcv as pcv
 
-def auto_canny(image, sigma=0.33):
-    # compute the median of the single channel pixel intensities
-    v = np.median(image)
-
-    # apply automatic Canny edge detection using the computed median
-    lower = int(max(0, (1.0 - sigma) * v))
-    upper = int(min(255, (1.0 + sigma) * v))
-    edged = cv2.Canny(image, lower, upper)
-
-    # return the edged image
-    return edged
+# 이미지의 메디안에 따라 자동 에지 검출
+# def auto_canny(image, sigma=0.33):
+#     # compute the median of the single channel pixel intensities
+#     v = np.median(image)
+#
+#     # apply automatic Canny edge detection using the computed median
+#     lower = int(max(0, (1.0 - sigma) * v))
+#     upper = int(min(255, (1.0 + sigma) * v))
+#     edged = cv2.Canny(image, lower, upper)
+#
+#     # return the edged image
+#     return edged
 # 블러
 size=5
 
@@ -21,14 +22,14 @@ kernel_motion_blur[int((size-1)/2),:] = np.ones(size)
 kernel_motion_blur = kernel_motion_blur / size
 
 # output = cv2.filter2D(img,-1,kernel_motion_blur)
-###
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0)   #카메라 객체 선언
 
+#ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ선명도 필터ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 kernel_sharpen_1 = np.array([[-1, -1, -1],[-1, 9, -1],[-1, -1, -1]])
 kernel_sharpen_2 = np.array([[1,1,1],[1,-7,1],[1,1,1]])
 kernel_sharpen_3 = np.array([[-1,-1,-1,-1,-1],[-1,2,2,2,-1],[-1,2,8,2,-1],[-1,2,2,2,-1],[-1,-1,-1,-1,-1]])/8.0
-# my
+#ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 
 ret, myframe = cap.read()
 
