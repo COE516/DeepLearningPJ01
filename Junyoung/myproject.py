@@ -35,7 +35,7 @@ ret, myframe = cap.read()
 
 myframe = cv2.flip(myframe, 1)
 M = np.ones(myframe.shape, dtype = "uint8") * 40 # 이미지 픽셀만큼 공간만들고, 100으로
-M2 = np.ones(myframe.shape, dtype = "uint8") * 68
+M2 = np.ones(myframe.shape, dtype = "uint8") * 40
 myframe = cv2.add(myframe, M)
 
 # myframe = cv2.filter2D(myframe, -1, kernel_sharpen_2)
@@ -53,8 +53,7 @@ while (1):
     frame = cv2.flip(frame, 1)
     frame = cv2.subtract(frame, M2)
 
-    cv2.imshow('Original', frame)
-    cv2.imshow('MyOriginal', myframe)
+
 
     gray1 = cv2.cvtColor(myframe, cv2.COLOR_BGR2GRAY)
     blurred1 = cv2.GaussianBlur(gray1, (3, 3), 3)
@@ -68,6 +67,10 @@ while (1):
 
     # cv2.imshow('Edges OR', auto)
     cv2.imshow('Edges', canny_median_blur)
+    canny_median_blur = cv2.cvtColor(canny_median_blur, cv2.COLOR_GRAY2BGR)
+    cv2.imshow('Original', frame | canny_median_blur)
+    cv2.imshow('MyOriginal', myframe)
+
     cv2.imshow('Edges1', auto1)
 
 
