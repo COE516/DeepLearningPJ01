@@ -47,13 +47,16 @@ while (1):
     # reads frames from a camera
     ret, frame = cap.read()
     frame = cv2.flip(frame, 1)
-    frame = cv2.subtract(frame, M2)
+    # frame = cv2.subtract(frame, M2)
+    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    frame[:, :, 2] = frame[:, :, 2] / 2
+    frame = cv2.cvtColor(frame, cv2.COLOR_HSV2BGR)
 
 
 
     gray1 = cv2.cvtColor(myframe, cv2.COLOR_BGR2GRAY)
     blurred1 = cv2.GaussianBlur(gray1, (3, 3), 3)
-    auto1 = pcv.canny_edge_detect(gray1, thickness=2.58)
+    auto1 = pcv.canny_edge_detect(gray1, thickness=3)
 
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     blurred = cv2.GaussianBlur(gray, (3, 3), 5)
@@ -64,7 +67,7 @@ while (1):
     # cv2.imshow('Edges OR', auto)
     cv2.imshow('Edges', canny_median_blur)
     canny_median_blur = cv2.cvtColor(canny_median_blur, cv2.COLOR_GRAY2BGR)
-    cv2.imshow('Original', frame | canny_median_blur)
+    cv2.imshow('Original', frame)
     cv2.imshow('MyOriginal', myframe)
 
     cv2.imshow('Edges1', auto1)
