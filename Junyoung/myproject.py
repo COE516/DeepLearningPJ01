@@ -41,10 +41,6 @@ myframe = cv2.add(myframe, M)
 # myframe = cv2.filter2D(myframe, -1, kernel_sharpen_2)
 myframe = cv2.filter2D(myframe, -1, kernel_sharpen_3)
 
-
-
-
-
 # loop runs if capturing has been initialized
 while (1):
 
