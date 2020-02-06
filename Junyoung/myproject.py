@@ -15,7 +15,7 @@ from plantcv import plantcv as pcv
 #     # return the edged image
 #     return edged
 # 블러
-size=1
+size=5
 
 kernel_motion_blur = np.zeros((size,size))
 kernel_motion_blur[int((size-1)/2),:] = np.ones(size)
@@ -34,9 +34,9 @@ kernel_sharpen_3 = np.array([[-1,-1,-1,-1,-1],[-1,2,2,2,-1],[-1,2,8,2,-1],[-1,2,
 ret, myframe = cap.read()
 
 myframe = cv2.flip(myframe, 1)
-M = np.ones(myframe.shape, dtype = "uint8") * 40 # 이미지 픽셀만큼 공간만들고, 100으로
-M2 = np.ones(myframe.shape, dtype = "uint8") * 40
-myframe = cv2.add(myframe, M)
+M = np.ones(myframe.shape, dtype = "uint8") * 30 # 이미지 픽셀만큼 공간만들고, 100으로
+M2 = np.ones(myframe.shape, dtype = "uint8") * 50
+# myframe = cv2.add(myframe, M)
 
 # myframe = cv2.filter2D(myframe, -1, kernel_sharpen_2)
 myframe = cv2.filter2D(myframe, -1, kernel_sharpen_3)
@@ -53,24 +53,21 @@ while (1):
     frame = cv2.flip(frame, 1)
     frame = cv2.subtract(frame, M2)
 
-
+    cv2.imshow('Original', frame)
+    cv2.imshow('MyOriginal', myframe)
 
     gray1 = cv2.cvtColor(myframe, cv2.COLOR_BGR2GRAY)
     blurred1 = cv2.GaussianBlur(gray1, (3, 3), 3)
-    auto1 = pcv.canny_edge_detect(gray1, thickness=2.58)
+    auto1 = pcv.canny_edge_detect(gray1, thickness=3.9)
 
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     blurred = cv2.GaussianBlur(gray, (3, 3), 5)
     blurred = cv2.filter2D(blurred, -1, kernel_motion_blur)
-    auto = pcv.canny_edge_detect(blurred, thickness=2) - auto1
-    canny_median_blur = cv2.medianBlur(auto, 3)
+    auto = pcv.canny_edge_detect(blurred, thickness=2.5) - auto1
+    canny_median_blur = cv2.medianBlur(auto, 5)
 
     # cv2.imshow('Edges OR', auto)
     cv2.imshow('Edges', canny_median_blur)
-    canny_median_blur = cv2.cvtColor(canny_median_blur, cv2.COLOR_GRAY2BGR)
-    cv2.imshow('Original', frame | canny_median_blur)
-    cv2.imshow('MyOriginal', myframe)
-
     cv2.imshow('Edges1', auto1)
 
 
