@@ -1,3 +1,0 @@
-opencv-python==3.4.9.31
-plantcv==3.7
-numpy==1.16.6
