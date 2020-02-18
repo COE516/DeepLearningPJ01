@@ -9,11 +9,16 @@ from pprint import pprint
 # Generates labels using most basic setup.  Supports various image sizes.  Returns image labels in same format
 # as original image.  Normalization matches MobileNetV2
 
+backimg = cv2.imread('back.png')
+
 trained_image_width=512
 mean_subtraction_value=127.5
 # image = np.array(Image.open('imgs/image1.jpg'))
 
 cap = cv2.VideoCapture(0)   #카메라 객체 선언
+cap.set(3, 1280)
+cap.set(4, 720)
+cap.set(5, 60)
 ret, image = cap.read()
 image = cv2.flip(image, 1)
 
@@ -49,10 +54,29 @@ while 1:
 
     # image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
     labels[labels[:,:] < np.max(labels)] = 0
-    labels = cv2.cvtColor(labels, cv2.COLOR_GRAY2RGB)
-    image[labels[:,:,:] == 0] = 0
+    labels = cv2.cvtColor(labels, cv2.COLOR_GRAY2BGR)
+    image[labels[:, :, :] == 0] = 0
 
-    cv2.imshow('image', image)
+
+
+
+    labels = cv2.resize(labels, dsize=(512, 384), interpolation=cv2.INTER_LINEAR)
+    image = cv2.resize(image, dsize=(512, 384), interpolation=cv2.INTER_LINEAR)
+    row, col, channel = image.shape
+
+    backcopy = np.copy(backimg)
+    dst = backcopy[100:100 + row, 50:50 + col]
+
+    img2gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    ret, mask = cv2.threshold(img2gray, 10, 255, cv2.THRESH_BINARY)
+    mask_inv = cv2.bitwise_not(mask)
+    img_bg = cv2.bitwise_and(dst, dst, mask=mask_inv)
+    img_fg = cv2.bitwise_and(image, image, mask=mask)
+
+    addimg = cv2.add(img_bg, img_fg)
+    backcopy[100:100+row, 50:50+col] = addimg
+
+    cv2.imshow('image', backcopy)
     cv2.imshow('labels', labels)
 
     # Wait for Esc key to stop
